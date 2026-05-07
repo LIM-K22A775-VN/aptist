@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="vi" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Quiz Practice</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .option-btn { transition: all 0.3s ease; }
+    .option-btn:not(.answered):hover { transform: translateX(4px); }
+    .correct { background: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; }
+    .incorrect { background: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+    .reveal { animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-slate-900 text-white overflow-auto">
+  <div class="w-full h-full flex flex-col px-4 py-6"><!-- Header -->
+   <header class="mb-6 text-center">
+    <h1 id="pageTitle" class="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">English Quiz Practice</h1>
+   </header><!-- Progress Bar -->
+   <div class="max-w-2xl mx-auto w-full mb-6">
+    <div class="flex justify-between items-center mb-2"><span class="text-sm text-slate-400">Câu <span id="currentQuestion">1</span>/<span id="totalQuestions">0</span></span> <span class="text-sm text-slate-400" id="scoreDisplay">Điểm: 0/0</span>
+    </div>
+    <div class="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+     <div id="progressBar" class="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all duration-300" style="width: 0%"></div>
+    </div>
+   </div><!-- Main Quiz Container -->
+   <main class="flex-1 flex items-center justify-center">
+    <div id="quizContainer" class="max-w-2xl w-full bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-2xl"></div>
+   </main>
+  </div>
+<script type="module">
+    import { quizData } from './listening.js';
+    
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answered = [];
+
+    function updateProgress() {
+      document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+      document.getElementById('totalQuestions').textContent = quizData.length;
+      const percentage = ((currentQuestionIndex + 1) / quizData.length) * 100;
+      document.getElementById('progressBar').style.width = percentage + '%';
+      document.getElementById('scoreDisplay').textContent = `Điểm: ${score}/${answered.length}`;
+    }
+
+    function showQuestion(index) {
+      const q = quizData[index];
+      const container = document.getElementById('quizContainer');
+      const isAnswered = answered.includes(index);
+
+      container.innerHTML = `
+        <div class="mb-6 pb-6 border-b border-slate-600">
+          <div class="flex items-start gap-3">
+            <button class="mt-1 flex-shrink-0 p-2 rounded-lg bg-slate-700 hover:bg-emerald-500/20 text-emerald-400 transition-colors" 
+              onclick="speakContext('${q.context.replace(/'/g, "\\'")}')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a6.5 6.5 0 0 1 0 9.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+            </button>
+            <p class="text-slate-300 text-base leading-relaxed flex-1">${q.context}</p>
+          </div>
+        </div>
+        
+        <p class="font-semibold text-xl mb-6 text-slate-100">${q.question}</p>
+        
+        <div class="space-y-3 mb-6" id="optionsContainer">
+          ${q.options.map((opt, oi) => {
+            let extraClass = "";
+            if (isAnswered) {
+                if (oi === q.correctAnswer) extraClass = "!bg-green-500/30 !border-green-500 !text-green-300";
+            }
+            return `
+            <button class="option-btn w-full text-left px-5 py-4 rounded-lg border border-slate-600 bg-slate-750 hover:bg-slate-700 text-slate-200 font-medium transition-all duration-300 ${extraClass}"
+              onclick="checkAnswer(${oi}, this)" ${isAnswered ? 'disabled' : ''}>
+              <span class="font-bold text-emerald-400 mr-3">${String.fromCharCode(65+oi)}.</span>${opt}
+            </button>
+          `}).join('')}
+        </div>
+        
+        <div id="explainSection" class="${isAnswered ? '' : 'hidden'} reveal mt-6 pt-6 border-t border-slate-600 space-y-4"></div>
+        
+        <div class="flex gap-3 mt-8">
+          <button onclick="previousQuestion()" class="flex-1 px-4 py-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium transition-colors ${currentQuestionIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}" ${currentQuestionIndex === 0 ? 'disabled' : ''}>
+            ← Câu trước
+          </button>
+          <button onclick="nextQuestion()" class="flex-1 px-4 py-3 rounded-lg ${isAnswered ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-700 hover:bg-slate-600'} text-slate-200 font-medium transition-colors ${!isAnswered ? 'opacity-50 cursor-not-allowed' : ''}" ${!isAnswered ? 'disabled' : ''}>
+            Câu tiếp theo →
+          </button>
+        </div>
+      `;
+
+      if (isAnswered) {
+        showExplanation(document.getElementById('explainSection'), q);
+      }
+      updateProgress();
+    }
+
+    function showExplanation(element, question) {
+      element.classList.remove('hidden');
+      element.innerHTML = `
+        <div class="space-y-4">
+          <div>
+            <p class="text-cyan-400 font-semibold text-sm mb-2">🇻🇳 Dịch nghĩa:</p>
+            <p class="text-slate-300 text-sm whitespace-pre-line leading-relaxed">${question.translation}</p>
+          </div>
+          <div>
+            <p class="text-emerald-400 font-semibold text-sm mb-2">📖 Giải thích chi tiết:</p>
+            <p class="text-slate-300 text-sm leading-relaxed">${question.explanation}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function checkAnswer(optionIndex, btn) {
+      const q = quizData[currentQuestionIndex];
+      const buttons = document.getElementById('optionsContainer').querySelectorAll('button');
+      buttons.forEach(b => b.disabled = true);
+
+      if (optionIndex === q.correctAnswer) {
+        btn.classList.add('!bg-green-500/30', '!border-green-500', '!text-green-300');
+        score++;
+      } else {
+        btn.classList.add('!bg-red-500/30', '!border-red-500', '!text-red-300');
+        buttons[q.correctAnswer].classList.add('!bg-green-500/30', '!border-green-500', '!text-green-300');
+      }
+
+      answered.push(currentQuestionIndex);
+      showExplanation(document.getElementById('explainSection'), q);
+      
+      const nextBtn = document.querySelector('[onclick="nextQuestion()"]');
+      nextBtn.disabled = false;
+      nextBtn.classList.replace('bg-slate-700', 'bg-emerald-600');
+      nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+      updateProgress();
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < quizData.length - 1) {
+        currentQuestionIndex++;
+        showQuestion(currentQuestionIndex);
+      }
+    }
+
+    function previousQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion(currentQuestionIndex);
+      }
+    }
+
+    function speakContext(text) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Đưa các hàm ra phạm vi toàn cục (window)
+    window.checkAnswer = checkAnswer;
+    window.nextQuestion = nextQuestion;
+    window.previousQuestion = previousQuestion;
+    window.speakContext = speakContext;
+
+    // Khởi tạo
+    showQuestion(0);
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f7d60f9213502b6',t:'MTc3ODEyNzA2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
