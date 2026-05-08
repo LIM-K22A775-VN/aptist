@@ -1,106 +1,178 @@
 <!doctype html>
 <html lang="vi" class="h-full">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>English Quiz Practice - Multi Lesson</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'DM Sans', sans-serif; background-color: #0f172a; }
-    .option-btn { transition: all 0.3s ease; }
-    .reveal { animation: slideDown 0.3s ease; }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-  </style>
-</head>
-<body class="min-h-full py-12 px-4">
-  <div class="max-w-2xl mx-auto">
-    <header class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-white mb-2">Luyện Nghe Tiếng Anh</h1>
-      <p class="text-slate-400">Chọn bài học và bắt đầu luyện tập</p>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>English Quiz Practice - Multi Lesson</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "DM Sans", sans-serif;
+        background-color: #0f172a;
+      }
+      .option-btn {
+        transition: all 0.3s ease;
+      }
+      .reveal {
+        animation: slideDown 0.3s ease;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-full py-12 px-4">
+    <div class="max-w-2xl mx-auto">
+      <header class="relative mb-8 text-center">
+        <a
+          href="menu.html"
+          class="absolute left-0 top-0 p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-xl transition-all flex items-center gap-2 group"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            ></path>
+          </svg>
+          <span class="hidden sm:inline font-medium">Thoát</span>
+        </a>
 
-    <div class="bg-slate-800 p-4 rounded-xl shadow-lg mb-6 border border-slate-700">
-      <label class="text-slate-400 text-sm block mb-2 font-medium">Danh sách bài học:</label>
-      <select id="lessonSelect" class="w-full bg-slate-900 text-slate-200 border border-slate-600 rounded-lg p-3 outline-none focus:border-emerald-500 transition-all cursor-pointer">
-        <option value="./listening.js">Bài học 1</option>
-        <option value="./listening2.js">Bài học 2</option>
-        <option value="./listening3.js">Bài học 3</option>
-        <option value="./listening4.js">Bài học 4</option>
-        <option value="./listening5.js">Bài học 5</option>
-      </select>
-    </div>
-
-    <div class="bg-slate-800 rounded-xl p-6 shadow-lg mb-6 border border-slate-700">
-      <div class="flex justify-between items-center mb-4">
-        <span class="text-slate-400 font-medium">Tiến độ: <span id="currentQuestion" class="text-emerald-400">0</span>/<span id="totalQuestions">0</span></span>
-        <span id="scoreDisplay" class="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-sm font-bold">Điểm: 0/0</span>
+        <h1 class="text-3xl font-bold text-white mb-2 uppercase tracking-tight">
+          Luyện Nghe Tiếng Anh
+        </h1>
+        <p class="text-slate-400">Chọn bài học và bắt đầu luyện tập</p>
+      </header>
+      <div
+        class="bg-slate-800 p-4 rounded-xl shadow-lg mb-6 border border-slate-700"
+      >
+        <label class="text-slate-400 text-sm block mb-2 font-medium"
+          >Danh sách bài học:</label
+        >
+        <select
+          id="lessonSelect"
+          class="w-full bg-slate-900 text-slate-200 border border-slate-600 rounded-lg p-3 outline-none focus:border-emerald-500 transition-all cursor-pointer"
+        >
+          <option value="./listening.js">Bài học 1</option>
+          <option value="./listening2.js">Bài học 2</option>
+          <option value="./listening3.js">Bài học 3</option>
+          <option value="./listening4.js">Bài học 4</option>
+          <option value="./listening5.js">Bài học 5</option>
+        </select>
       </div>
-      <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-        <div id="progressBar" class="bg-emerald-500 h-full w-0 transition-all duration-500"></div>
-      </div>
-    </div>
 
-    <div id="quizContainer" class="bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-700 min-h-[400px]">
-        <div class="flex flex-col items-center justify-center h-full text-slate-500">
-            <p>Đang tải dữ liệu bài học...</p>
+      <div
+        class="bg-slate-800 rounded-xl p-6 shadow-lg mb-6 border border-slate-700"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-slate-400 font-medium"
+            >Tiến độ:
+            <span id="currentQuestion" class="text-emerald-400">0</span>/<span
+              id="totalQuestions"
+              >0</span
+            ></span
+          >
+          <span
+            id="scoreDisplay"
+            class="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-sm font-bold"
+            >Điểm: 0/0</span
+          >
         </div>
+        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+          <div
+            id="progressBar"
+            class="bg-emerald-500 h-full w-0 transition-all duration-500"
+          ></div>
+        </div>
+      </div>
+
+      <div
+        id="quizContainer"
+        class="bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-700 min-h-[400px]"
+      >
+        <div
+          class="flex flex-col items-center justify-center h-full text-slate-500"
+        >
+          <p>Đang tải dữ liệu bài học...</p>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <script type="module">
-    let quizData = [];
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let answered = [];
+    <script type="module">
+      let quizData = [];
+      let currentQuestionIndex = 0;
+      let score = 0;
+      let answered = [];
 
-    // --- LOGIC TẢI BÀI HỌC ---
-    async function loadLesson(fileUrl) {
-      try {
-        const container = document.getElementById('quizContainer');
-        container.innerHTML = '<div class="text-center text-slate-400">Đang tải bài học...</div>';
-        
-        // Reset trạng thái
-        currentQuestionIndex = 0;
-        score = 0;
-        answered = [];
+      // --- LOGIC TẢI BÀI HỌC ---
+      async function loadLesson(fileUrl) {
+        try {
+          const container = document.getElementById("quizContainer");
+          container.innerHTML =
+            '<div class="text-center text-slate-400">Đang tải bài học...</div>';
 
-        // Import động file JS (thêm timestamp để tránh cache trình duyệt)
-        const module = await import(fileUrl + '?t=' + Date.now());
-        quizData = module.quizData;
+          // Reset trạng thái
+          currentQuestionIndex = 0;
+          score = 0;
+          answered = [];
 
-        showQuestion(0);
-        updateProgress();
-      } catch (error) {
-        console.error("Lỗi:", error);
-        document.getElementById('quizContainer').innerHTML = `
+          // Import động file JS (thêm timestamp để tránh cache trình duyệt)
+          const module = await import(fileUrl + "?t=" + Date.now());
+          quizData = module.quizData;
+
+          showQuestion(0);
+          updateProgress();
+        } catch (error) {
+          console.error("Lỗi:", error);
+          document.getElementById("quizContainer").innerHTML = `
           <div class="text-center text-red-400">
             <p>Không tìm thấy file: <b>${fileUrl}</b></p>
             <p class="text-sm mt-2 text-slate-500">Hãy đảm bảo bạn đã tạo file này trong thư mục dự án.</p>
           </div>`;
+        }
       }
-    }
 
-    // Sự kiện đổi bài học
-    document.getElementById('lessonSelect').addEventListener('change', (e) => {
-      loadLesson(e.target.value);
-    });
+      // Sự kiện đổi bài học
+      document
+        .getElementById("lessonSelect")
+        .addEventListener("change", (e) => {
+          loadLesson(e.target.value);
+        });
 
-    // --- CÁC HÀM XỬ LÝ QUIZ ---
-    function updateProgress() {
-      document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
-      document.getElementById('totalQuestions').textContent = quizData.length;
-      const percentage = ((currentQuestionIndex + 1) / quizData.length) * 100;
-      document.getElementById('progressBar').style.width = percentage + '%';
-      document.getElementById('scoreDisplay').textContent = `Điểm: ${score}/${answered.length}`;
-    }
+      // --- CÁC HÀM XỬ LÝ QUIZ ---
+      function updateProgress() {
+        document.getElementById("currentQuestion").textContent =
+          currentQuestionIndex + 1;
+        document.getElementById("totalQuestions").textContent = quizData.length;
+        const percentage = ((currentQuestionIndex + 1) / quizData.length) * 100;
+        document.getElementById("progressBar").style.width = percentage + "%";
+        document.getElementById("scoreDisplay").textContent =
+          `Điểm: ${score}/${answered.length}`;
+      }
 
-    function showQuestion(index) {
-      const q = quizData[index];
-      const container = document.getElementById('quizContainer');
-      const isAnswered = answered.includes(index);
+      function showQuestion(index) {
+        const q = quizData[index];
+        const container = document.getElementById("quizContainer");
+        const isAnswered = answered.includes(index);
 
-      container.innerHTML = `
+        container.innerHTML = `
         <div class="mb-6 pb-6 border-b border-slate-700">
           <div class="flex items-start gap-3">
             <button class="mt-1 p-2 rounded-lg bg-slate-700 hover:bg-emerald-500/20 text-emerald-400 transition-colors" 
@@ -118,20 +190,25 @@
         <p class="font-semibold text-xl mb-6 text-slate-100">${q.question}</p>
         
         <div class="space-y-3 mb-6" id="optionsContainer">
-          ${q.options.map((opt, oi) => {
-            let extraClass = "";
-            if (isAnswered) {
-                if (oi === q.correctAnswer) extraClass = "!bg-emerald-500/20 !border-emerald-500 !text-emerald-400";
-            }
-            return `
+          ${q.options
+            .map((opt, oi) => {
+              let extraClass = "";
+              if (isAnswered) {
+                if (oi === q.correctAnswer)
+                  extraClass =
+                    "!bg-emerald-500/20 !border-emerald-500 !text-emerald-400";
+              }
+              return `
             <button class="option-btn w-full text-left px-5 py-4 rounded-lg border border-slate-700 bg-slate-750 hover:bg-slate-700 text-slate-300 font-medium ${extraClass}"
-              onclick="checkAnswer(${oi}, this)" ${isAnswered ? 'disabled' : ''}>
-              <span class="font-bold text-emerald-500 mr-3">${String.fromCharCode(65+oi)}.</span>${opt}
+              onclick="checkAnswer(${oi}, this)" ${isAnswered ? "disabled" : ""}>
+              <span class="font-bold text-emerald-500 mr-3">${String.fromCharCode(65 + oi)}.</span>${opt}
             </button>
-          `}).join('')}
+          `;
+            })
+            .join("")}
         </div>
         
-        <div id="explainSection" class="${isAnswered ? '' : 'hidden'} reveal mt-6 pt-6 border-t border-slate-700 space-y-4">
+        <div id="explainSection" class="${isAnswered ? "" : "hidden"} reveal mt-6 pt-6 border-t border-slate-700 space-y-4">
             <div>
               <p class="text-cyan-400 font-semibold text-sm mb-1">Dịch nghĩa:</p>
               <p class="text-slate-400 text-sm italic">${q.translation}</p>
@@ -143,67 +220,81 @@
         </div>
         
         <div class="flex gap-3 mt-8">
-          <button onclick="previousQuestion()" class="flex-1 px-4 py-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 font-medium transition-colors ${currentQuestionIndex === 0 ? 'opacity-50' : ''}" ${currentQuestionIndex === 0 ? 'disabled' : ''}>
+          <button onclick="previousQuestion()" class="flex-1 px-4 py-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 font-medium transition-colors ${currentQuestionIndex === 0 ? "opacity-50" : ""}" ${currentQuestionIndex === 0 ? "disabled" : ""}>
             ← Câu trước
           </button>
-          <button onclick="nextQuestion()" class="flex-1 px-4 py-3 rounded-lg ${isAnswered ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-700 opacity-50'} text-white font-medium transition-colors" ${!isAnswered ? 'disabled' : ''}>
+          <button onclick="nextQuestion()" class="flex-1 px-4 py-3 rounded-lg ${isAnswered ? "bg-emerald-600 hover:bg-emerald-700" : "bg-slate-700 opacity-50"} text-white font-medium transition-colors" ${!isAnswered ? "disabled" : ""}>
             Câu tiếp theo →
           </button>
         </div>
       `;
-      updateProgress();
-    }
-
-    function checkAnswer(optionIndex, btn) {
-      const q = quizData[currentQuestionIndex];
-      const buttons = document.getElementById('optionsContainer').querySelectorAll('button');
-      
-      answered.push(currentQuestionIndex);
-      if (optionIndex === q.correctAnswer) {
-        btn.classList.add('!bg-emerald-500/20', '!border-emerald-500', '!text-emerald-400');
-        score++;
-      } else {
-        btn.classList.add('!bg-red-500/20', '!border-red-500', '!text-red-400');
-        buttons[q.correctAnswer].classList.add('!bg-emerald-500/20', '!border-emerald-500', '!text-emerald-400');
+        updateProgress();
       }
 
-      // Hiện giải thích và mở khóa nút Next
-      document.getElementById('explainSection').classList.remove('hidden');
-      showQuestion(currentQuestionIndex); // Reload lại để cập nhật trạng thái các nút
-    }
+      function checkAnswer(optionIndex, btn) {
+        const q = quizData[currentQuestionIndex];
+        const buttons = document
+          .getElementById("optionsContainer")
+          .querySelectorAll("button");
 
-    function nextQuestion() {
-      if (currentQuestionIndex < quizData.length - 1) {
-        currentQuestionIndex++;
-        showQuestion(currentQuestionIndex);
-      } else {
-        alert("Bạn đã hoàn thành bài học này!");
+        answered.push(currentQuestionIndex);
+        if (optionIndex === q.correctAnswer) {
+          btn.classList.add(
+            "!bg-emerald-500/20",
+            "!border-emerald-500",
+            "!text-emerald-400",
+          );
+          score++;
+        } else {
+          btn.classList.add(
+            "!bg-red-500/20",
+            "!border-red-500",
+            "!text-red-400",
+          );
+          buttons[q.correctAnswer].classList.add(
+            "!bg-emerald-500/20",
+            "!border-emerald-500",
+            "!text-emerald-400",
+          );
+        }
+
+        // Hiện giải thích và mở khóa nút Next
+        document.getElementById("explainSection").classList.remove("hidden");
+        showQuestion(currentQuestionIndex); // Reload lại để cập nhật trạng thái các nút
       }
-    }
 
-    function previousQuestion() {
-      if (currentQuestionIndex > 0) {
-        currentQuestionIndex--;
-        showQuestion(currentQuestionIndex);
+      function nextQuestion() {
+        if (currentQuestionIndex < quizData.length - 1) {
+          currentQuestionIndex++;
+          showQuestion(currentQuestionIndex);
+        } else {
+          alert("Bạn đã hoàn thành bài học này!");
+        }
       }
-    }
 
-    function speakContext(text) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.9;
-      window.speechSynthesis.speak(utterance);
-    }
+      function previousQuestion() {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          showQuestion(currentQuestionIndex);
+        }
+      }
 
-    // Đưa ra global để HTML gọi được
-    window.checkAnswer = checkAnswer;
-    window.nextQuestion = nextQuestion;
-    window.previousQuestion = previousQuestion;
-    window.speakContext = speakContext;
+      function speakContext(text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US";
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+      }
 
-    // Load bài đầu tiên mặc định
-    loadLesson('./listening.js');
-  </script>
-</body>
+      // Đưa ra global để HTML gọi được
+      window.checkAnswer = checkAnswer;
+      window.nextQuestion = nextQuestion;
+      window.previousQuestion = previousQuestion;
+      window.speakContext = speakContext;
+
+      // Load bài đầu tiên mặc định
+      loadLesson("./listening.js");
+    </script>
+  </body>
 </html>

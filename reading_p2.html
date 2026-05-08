@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reading Part 2 - Weekend Activities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f1f5f9;
+      }
+      .drag-item {
+        cursor: grab;
+        transition: all 0.2s;
+        border: 1px solid #e2e8f0;
+      }
+      .drag-item:hover {
+        border-color: #3b82f6;
+        background-color: #f8fafc;
+        transform: translateX(2px);
+      }
+      .drag-item:active {
+        cursor: grabbing;
+      }
+      .drop-zone {
+        min-height: 64px;
+        transition: all 0.3s;
+        position: relative;
+      }
+      .drop-zone.drag-over {
+        background-color: #eff6ff;
+        border-color: #3b82f6;
+        border-style: solid;
+      }
+      .number-badge {
+        background: #e2e8f0;
+        color: #64748b;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col">
+<header class="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <a href="menu.html" class="mr-2 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </a>
+
+            <div class="bg-blue-600 text-white p-2 rounded-lg">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-800">Reading Part 2</h1>
+                <div class="flex items-center gap-3 text-sm text-slate-500">
+                    <span class="flex items-center gap-1"><b id="current-q-label">1</b>/13 Câu hỏi</span>
+                    <span class="h-4 w-px bg-slate-300"></span>
+                    <span class="text-blue-600 font-medium italic">Sắp xếp đoạn văn</span>
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="checkResult()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-2.5 rounded-xl font-bold transition-all shadow-md">
+            Nộp bài
+        </button>
+    </div>
+</header>
+
+    <main class="flex-grow p-4 md:p-8">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-6 flex items-center gap-3">
+          <span
+            class="text-xs font-black uppercase tracking-[0.2em] text-slate-400"
+            >Topic:</span
+          >
+          <span
+            id="topic-label"
+            class="bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm border border-amber-200"
+          >
+            Weekend activities
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div class="space-y-4">
+            <div class="flex justify-between items-end px-2">
+              <h2
+                class="text-xs font-black text-slate-400 tracking-[0.2em] uppercase italic"
+              >
+                Your Order
+              </h2>
+              <button
+                onclick="resetCurrent()"
+                class="text-xs text-blue-600 font-bold hover:underline"
+              >
+                RESET
+              </button>
+            </div>
+            <div id="drop-containers" class="space-y-3"></div>
+
+            <div
+              class="mt-8 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"
+            >
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-1.5 h-4 bg-blue-500 rounded-full"></div>
+                <h3
+                  class="font-bold text-slate-700 uppercase text-[10px] tracking-widest italic"
+                >
+                  Dịch chi tiết từ vựng
+                </h3>
+              </div>
+              <div
+                id="full-translation-area"
+                class="min-h-[70px] flex items-center justify-center border border-dashed border-slate-200 rounded-xl p-4 italic text-slate-400 text-sm text-center"
+              >
+                Di chuột vào câu để tra cứu nghĩa từng từ không bỏ sót...
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="px-2">
+              <h2
+                class="text-xs font-black text-slate-400 tracking-[0.2em] uppercase italic"
+              >
+                Sentences
+              </h2>
+            </div>
+            <div id="sentence-pool" class="space-y-3"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div
+      class="sticky bottom-0 bg-white/90 backdrop-blur-md border-t border-slate-200 p-4"
+    >
+      <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <button
+          onclick="prevQuestion()"
+          class="flex items-center gap-2 px-4 py-2 text-slate-500 font-bold hover:bg-slate-100 rounded-lg transition-colors text-sm"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            ></path>
+          </svg>
+          TRƯỚC
+        </button>
+        <div class="flex gap-2" id="pagination-dots"></div>
+        <button
+          onclick="nextQuestion()"
+          class="flex items-center gap-2 px-4 py-2 text-blue-600 font-bold hover:bg-blue-50 rounded-lg transition-colors text-sm"
+        >
+          TIẾP THEO
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+<script type="module">
+    // 1. Nhập dữ liệu từ file bên ngoài
+    import { quizData } from './reading_p2.js';
+
+    let currentIdx = 0;
+
+    // 2. Hàm khởi tạo nội dung câu hỏi
+    function initQuiz() {
+        const data = quizData[currentIdx];
+        if (!data) return;
+
+        // Cập nhật nhãn và chủ đề
+        document.getElementById("current-q-label").innerText = currentIdx + 1;
+        document.getElementById("topic-label").innerText = data.topic;
+
+        // Tạo các ô thả (drop zones) bên trái
+        const dropContainers = document.getElementById("drop-containers");
+        dropContainers.innerHTML = "";
+        for (let i = 1; i <= 5; i++) {
+            dropContainers.innerHTML += `
+                <div class="flex items-start gap-4">
+                    <div class="mt-4"><div class="number-badge">${i}</div></div>
+                    <div id="drop-${i}" class="drop-zone flex-1 border-2 border-dashed border-slate-200 bg-white rounded-2xl p-2 flex items-center shadow-inner" 
+                         ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+                </div>
+            `;
+        }
+
+        // Tạo danh sách câu văn bên phải (đã trộn ngẫu nhiên)
+        const pool = document.getElementById("sentence-pool");
+        pool.innerHTML = "";
+        const shuffled = [...data.sentences].sort(() => Math.random() - 0.5);
+        shuffled.forEach((s) => {
+            const el = document.createElement("div");
+            el.id = s.id;
+            el.className = "drag-item bg-white p-4 rounded-xl shadow-sm text-sm text-slate-700 font-medium select-none border border-slate-200 cursor-grab active:cursor-grabbing hover:border-blue-400 transition-colors";
+            el.draggable = true;
+            el.innerText = s.text;
+            
+            // Gán sự kiện
+            el.ondragstart = drag;
+            el.onmouseover = () => showTranslation(s.id);
+            pool.appendChild(el);
+        });
+
+        updateDots();
+    }
+
+    // --- CÁC HÀM XỬ LÝ LOGIC ---
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+        ev.currentTarget.classList.add("drag-over");
+    }
+
+    function dragLeave(ev) {
+        ev.currentTarget.classList.remove("drag-over");
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        ev.currentTarget.classList.remove("drag-over");
+        const dataId = ev.dataTransfer.getData("text");
+        const draggedEl = document.getElementById(dataId);
+        
+        // Nếu ô đã có câu, trả câu cũ về danh sách pool
+        if (ev.currentTarget.children.length > 0) {
+            document.getElementById("sentence-pool").appendChild(ev.currentTarget.children[0]);
+        }
+        ev.currentTarget.appendChild(draggedEl);
+    }
+
+    function showTranslation(sId) {
+        const sentence = quizData[currentIdx].sentences.find((s) => s.id === sId);
+        const area = document.getElementById("full-translation-area");
+        if (!sentence) return;
+
+        area.classList.remove("justify-center", "text-center");
+        let html = `<div class="flex flex-wrap gap-x-6 gap-y-3 w-full">`;
+        sentence.words.forEach((item) => {
+            html += `
+                <div class="flex flex-col border-b border-slate-100 pb-1">
+                    <span class="text-blue-600 font-bold text-base">${item.w}</span>
+                    <span class="text-[11px] text-slate-400 font-medium">${item.m}</span>
+                </div>`;
+        });
+        html += `</div>`;
+        area.innerHTML = html;
+    }
+
+    function updateDots() {
+        const container = document.getElementById("pagination-dots");
+        container.innerHTML = "";
+        quizData.forEach((_, i) => {
+            const dot = document.createElement("div");
+            dot.className = `w-2 h-2 rounded-full ${i === currentIdx ? "bg-blue-600 w-6" : "bg-slate-300"} transition-all`;
+            container.appendChild(dot);
+        });
+    }
+
+    // --- XUẤT CÁC HÀM RA WINDOW ĐỂ ONCLICK CÓ THỂ GỌI ---
+
+    window.checkResult = function() {
+        const correctOrder = quizData[currentIdx].correct_order;
+        let count = 0;
+        for (let i = 1; i <= 5; i++) {
+            const zone = document.getElementById(`drop-${i}`);
+            const item = zone.children[0];
+            if (item && item.id === correctOrder[i - 1]) {
+                zone.className = "drop-zone flex-1 border-2 border-emerald-500 bg-emerald-50 rounded-2xl p-2 flex items-center";
+                count++;
+            } else {
+                zone.className = "drop-zone flex-1 border-2 border-red-400 bg-red-50 rounded-2xl p-2 flex items-center";
+            }
+        }
+        alert(`Bạn đã hoàn thành với ${count}/5 câu chính xác.`);
+    };
+
+    window.resetCurrent = () => initQuiz();
+
+    window.nextQuestion = function() {
+        if (currentIdx < quizData.length - 1) {
+            currentIdx++;
+            initQuiz();
+        }
+    };
+
+    window.prevQuestion = function() {
+        if (currentIdx > 0) {
+            currentIdx--;
+            initQuiz();
+        }
+    };
+
+    // Chạy khởi tạo lần đầu
+    initQuiz();
+
+    // Gán các hàm drag/drop phụ trợ vào window
+    window.drop = drop;
+    window.allowDrop = allowDrop;
+    window.dragLeave = dragLeave;
+</script>
+  </body>
+</html>

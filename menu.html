@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Luyện Tập Tiếng Anh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .menu-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-4xl w-full">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-extrabold text-white mb-4 bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                English Quiz System
+            </h1>
+            <p class="text-slate-400">Vui lòng chọn học phần bạn muốn luyện tập hôm nay</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="index.html" class="menu-card bg-slate-800 p-6 rounded-2xl border border-slate-700 flex items-center group relative overflow-hidden">
+                <div class="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center text-xl font-bold mr-5 group-hover:bg-blue-500 group-hover:text-white transition-colors duration-300">
+                    P1
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-100">LISTENING PART 1</h2>
+                    <p class="text-slate-400 text-sm">Mô tả hình ảnh (Photographs)</p>
+                </div>
+                <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </div>
+            </a>
+
+            <a href="reading_p2.html" class="menu-card bg-slate-800 p-6 rounded-2xl border border-slate-700 flex items-center group relative overflow-hidden">
+                <div class="w-14 h-14 bg-green-500/10 text-green-400 rounded-xl flex items-center justify-center text-xl font-bold mr-5 group-hover:bg-green-500 group-hover:text-white transition-colors duration-300">
+                    P2
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-100">READING PART 2</h2>
+                    <p class="text-slate-400 text-sm">Hỏi & Đáp (Question - Response)</p>
+                </div>
+                <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </div>
+            </a>
+
+            <a href="part3.html" class="menu-card bg-slate-800 p-6 rounded-2xl border border-slate-700 flex items-center group relative overflow-hidden">
+                <div class="w-14 h-14 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center text-xl font-bold mr-5 group-hover:bg-purple-500 group-hover:text-white transition-colors duration-300">
+                    P3
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-100">Part 3</h2>
+                    <p class="text-slate-400 text-sm">Đoạn hội thoại (Conversations)</p>
+                </div>
+                <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </div>
+            </a>
+
+            <a href="part4.html" class="menu-card bg-slate-800 p-6 rounded-2xl border border-slate-700 flex items-center group relative overflow-hidden">
+                <div class="w-14 h-14 bg-orange-500/10 text-orange-400 rounded-xl flex items-center justify-center text-xl font-bold mr-5 group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300">
+                    P4
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-100">Part 4</h2>
+                    <p class="text-slate-400 text-sm">Bài nói ngắn (Short Talks)</p>
+                </div>
+                <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </div>
+            </a>
+        </div>
+
+        <footer class="mt-16 text-center">
+            <p class="text-slate-500 text-sm italic">
+                © 2026 Designed by Nguyễn Xuân Tâm - UNETI
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
