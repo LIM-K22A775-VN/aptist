@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Part 4 - Minimal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .is-correct { border-color: #10b981 !important; background-color: #f0fdf4 !important; color: #15803d !important; pointer-events: none; }
+        .is-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #b91c1c !important; }
+        .select-box {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.2em 1.2em;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-24">
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </a>
+                <h1 id="topic-title" class="font-bold text-slate-800 tracking-tight text-lg"></h1>
+            </div>
+            <div id="quest-number" class="text-xs font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-full uppercase tracking-widest"></div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto mt-8 px-4">
+        <div id="paragraphs-container" class="space-y-10">
+            </div>
+    </main>
+
+    <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <button onclick="window.changeQuestion(-1)" class="px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100 rounded-lg transition-all flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                Câu trước
+            </button>
+            
+            <div id="pagination-dots" class="flex gap-2"></div>
+
+            <button onclick="window.changeQuestion(1)" class="px-4 py-2 text-sm font-bold text-blue-600 hover:bg-blue-50 rounded-lg transition-all flex items-center gap-2">
+                Câu tiếp
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { readingP4Data } from './reading_p4.js';
+        let currentIdx = 0;
+
+        function init() {
+            const data = readingP4Data[currentIdx];
+            if (!data) return;
+
+            document.getElementById('topic-title').innerText = data.title;
+            document.getElementById('quest-number').innerText = `${currentIdx + 1} / ${readingP4Data.length}`;
+            
+            const container = document.getElementById('paragraphs-container');
+            container.innerHTML = '';
+
+            data.paragraphs.forEach((p, index) => {
+                const block = document.createElement('div');
+                block.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6";
+                block.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Đoạn văn ${index + 1}</span>
+                            <div id="result-status-${index}"></div>
+                        </div>
+                        
+                        <select id="select-${index}" onchange="window.handleSelection(${index})" class="select-box w-full border border-slate-200 rounded-xl py-3 px-4 text-sm font-semibold text-slate-700 focus:outline-none focus:border-blue-500 transition-all bg-slate-50">
+                            ${data.options.map((opt, i) => `<option value="${i}" ${i===0 ? 'selected' : ''}>${opt}</option>`).join('')}
+                        </select>
+
+                        <div id="hint-${index}" class="hidden py-2 px-4 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-bold border border-emerald-100">
+                            ✓ Đáp án: ${data.options[p.correct_option]}
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <p class="text-slate-700 leading-relaxed font-medium text-[16px]">
+                            ${p.content}
+                        </p>
+                        <p class="text-slate-400 text-sm italic leading-relaxed border-t border-slate-50 pt-4">
+                            <span class="font-bold opacity-50 not-italic mr-1">DỊCH:</span> ${p.translation}
+                        </p>
+                    </div>
+                `;
+                container.appendChild(block);
+            });
+            updateDots();
+        }
+
+        window.handleSelection = (idx) => {
+            const data = readingP4Data[currentIdx];
+            const select = document.getElementById(`select-${idx}`);
+            const hint = document.getElementById(`hint-${idx}`);
+            const status = document.getElementById(`result-status-${idx}`);
+            const userVal = parseInt(select.value);
+            const correctVal = data.paragraphs[idx].correct_option;
+
+            select.classList.remove('is-correct', 'is-wrong');
+            hint.classList.add('hidden');
+
+            if (userVal === correctVal) {
+                select.classList.add('is-correct');
+                status.innerHTML = '<span class="text-emerald-500 text-[10px] font-black uppercase">Đúng</span>';
+            } else {
+                select.classList.add('is-wrong');
+                hint.classList.remove('hidden');
+                status.innerHTML = '<span class="text-red-500 text-[10px] font-black uppercase">Sai</span>';
+            }
+        }
+
+        window.changeQuestion = (step) => {
+            const nextIdx = currentIdx + step;
+            if (nextIdx >= 0 && nextIdx < readingP4Data.length) {
+                currentIdx = nextIdx;
+                init();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function updateDots() {
+            const container = document.getElementById('pagination-dots');
+            container.innerHTML = readingP4Data.map((_, i) => `
+                <div class="w-1.5 h-1.5 rounded-full ${i === currentIdx ? 'bg-blue-600 scale-125' : 'bg-slate-200'} transition-all"></div>
+            `).join('');
+        }
+
+        init();
+    </script>
+</body>
+</html>
