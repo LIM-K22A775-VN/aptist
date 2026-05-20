@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luyện Viết Tiếng Anh - Writing Part 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        color: #1e293b;
+      }
+      .writing-container-box {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .writing-shared-style {
+        grid-area: 1 / 1 / 2 / 2;
+        font-family: monospace;
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+        letter-spacing: 0.05em;
+        word-break: break-word;
+        white-space: pre-wrap;
+        padding: 1rem;
+        min-height: 80px;
+      }
+      .ghost-text {
+        color: #cbd5e1;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 10;
+      }
+      .writing-textarea {
+        background: transparent;
+        color: #1e293b; /* Mặc định chữ màu tối để không lộ đúng sai khi gõ */
+        resize: none;
+        border: none;
+        z-index: 20;
+      }
+      .writing-textarea:focus {
+        outline: none;
+      }
+      .row-wrong {
+        border-color: #ef4444 !important;
+        background-color: #fef2f2;
+      }
+      .row-correct {
+        border-color: #10b981 !important;
+        background-color: #f0fdf4;
+      }
+      .ghost-hidden {
+        opacity: 0 !important;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen pb-24">
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+      <div class="max-w-4xl mx-auto px-6 h-16 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <a href="index.html" class="text-slate-400 hover:text-slate-600 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+          </a>
+          <div>
+            <h1 class="font-bold text-slate-800 text-lg">Luyện Viết Câu (Writing Part 4)</h1>
+            <p class="text-xs text-slate-400">Gõ lại từng câu hoặc thực hành gõ cả đoạn văn hoàn chỉnh</p>
+          </div>
+        </div>
+        <button onclick="window.checkAllRows()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">
+          Kiểm tra toàn bộ câu lẻ
+        </button>
+      </div>
+    </header>
+
+    <section class="max-w-4xl mx-auto mt-6 px-4">
+      <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Cấu hình bảng tập:</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <label class="flex items-center gap-2 cursor-pointer select-none border-r border-slate-200 pr-6">
+            <input type="checkbox" id="toggle-instant-error" class="w-4 h-4 text-red-600 border-slate-300 rounded focus:ring-red-500" />
+            <span class="text-xs font-bold text-red-600">Bắt lỗi lập tức khi gõ</span>
+          </label>
+
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="toggle-ghost" checked onchange="window.updateDisplaySettings()" class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500" />
+            <span class="text-xs font-semibold text-slate-600">Hiện chữ mẫu nền dưới</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-600">Ngôn ngữ mẫu nền:</span>
+            <select id="select-lang" onchange="window.updateDisplaySettings()" class="bg-slate-50 border border-slate-200 rounded-lg p-1 text-xs font-bold text-slate-700 focus:outline-none">
+              <option value="en">Tiếng Anh mẫu</option>
+              <option value="vi">Tiếng Việt dịch</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="max-w-4xl mx-auto mt-6 px-4 space-y-12">
+      <div class="bg-slate-100/60 p-6 rounded-3xl border border-slate-200/60 space-y-6">
+        <div class="border-b border-slate-200 pb-3">
+          <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+            🚀 KHU VỰC 1: LUYỆN GÕ TỪNG CÂU LẺ (Nhớ cấu trúc)
+          </h2>
+        </div>
+
+        <div>
+          <h3 class="text-xs font-black text-slate-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+            <span class="w-2 h-4 bg-amber-500 rounded-sm"></span> Part 4A: Email to a Friend (Khoảng 50 từ)
+          </h3>
+          <div id="container-partA" class="space-y-4"></div>
+        </div>
+
+        <hr class="border-slate-200">
+
+        <div>
+          <h3 class="text-xs font-black text-slate-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+            <span class="w-2 h-4 bg-blue-600 rounded-sm"></span> Part 4B: Email to the Manager (Khoảng 120-150 từ)
+          </h3>
+          <div id="container-partB" class="space-y-4"></div>
+        </div>
+      </div>
+
+
+      <div class="bg-blue-50/40 p-6 rounded-3xl border border-blue-200/60 space-y-6">
+        <div class="border-b border-blue-200 pb-3">
+          <h2 class="text-base font-bold text-blue-900 flex items-center gap-2">
+            📝 KHU VỰC 2: KIỂM TRA VIẾT TOÀN BỘ ĐOẠN VĂN (Thi thật)
+          </h2>
+          <p class="text-xs text-slate-500 mt-1">Nối tất cả các câu trên lại thành bài văn hoàn chỉnh, xuống dòng đúng vị trí để hệ thống check.</p>
+        </div>
+
+        <div id="wrapper-full-partA" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 transition-all">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs font-black text-amber-600 uppercase tracking-widest flex items-center gap-2">
+               Gõ liền mạch Thư Bạn Bè (Part 4A)
+            </h3>
+            <button onclick="window.checkFullParagraph('partA')" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded-lg text-[11px] font-bold transition-all shadow-sm">
+              Kiểm tra đoạn này
+            </button>
+          </div>
+          <div class="writing-container-box border border-slate-200 rounded-xl bg-slate-50/50 relative overflow-hidden">
+            <div id="ghost-full-partA" class="ghost-text writing-shared-style !min-h-[160px]"></div>
+            <textarea id="input-full-partA" oninput="window.handleFullTyping('partA')" autocomplete="off" spellcheck="false" class="writing-textarea writing-shared-style !min-h-[160px]"></textarea>
+          </div>
+        </div>
+
+        <div id="wrapper-full-partB" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 transition-all">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs font-black text-blue-600 uppercase tracking-widest flex items-center gap-2">
+               Gõ liền mạch Thư Quản Lý (Part 4B)
+            </h3>
+            <button onclick="window.checkFullParagraph('partB')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-[11px] font-bold transition-all shadow-sm">
+              Kiểm tra đoạn này
+            </button>
+          </div>
+          <div class="writing-container-box border border-slate-200 rounded-xl bg-slate-50/50 relative overflow-hidden">
+            <div id="ghost-full-partB" class="ghost-text writing-shared-style !min-h-[280px]"></div>
+            <textarea id="input-full-partB" oninput="window.handleFullTyping('partB')" autocomplete="off" spellcheck="false" class="writing-textarea writing-shared-style !min-h-[280px]"></textarea>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script type="module">
+      const partAData = [
+        { id: 0, en: "Hi Tim,", vi: "Chào Tim," },
+        { id: 1, en: "How are you these days?", vi: "Dạo này bạn thế nào rồi?" },
+        { id: 2, en: "I hope you and your family are well.", vi: "Mình hy vọng bạn và gia đình đều khỏe." },
+        { id: 3, en: "I am writing this email to tell you some news related to my sports club.", vi: "Mình viết email này để kể cho bạn nghe vài tin tức liên quan đến câu lạc bộ thể thao của mình." },
+        { id: 4, en: "I'd love to hear your thoughts on this.", vi: "Mình rất muốn biết suy nghĩ của bạn về việc này." },
+        { id: 5, en: "Let's catch up soon and discuss some suggestions.", vi: "Hãy sớm gặp nhau và thảo luận một vài gợi ý nhé." },
+        { id: 6, en: "Bye for now,", vi: "Chào bạn nhé," },
+        { id: 7, en: "Tam", vi: "Tâm" }
+      ];
+
+      const partBData = [
+        { id: 0, en: "Dear Club Manager,", vi: "Kính gửi Quản lý Câu lạc bộ," },
+        { id: 1, en: "I hope this email finds you well.", vi: "Tôi hy vọng email này đến với ông/bà trong tình trạng tốt đẹp nhất." },
+        { id: 2, en: "My name is Tam. I am twenty-three years old.", vi: "Tên tôi là Tâm. Tôi hai mươi ba tuổi." },
+        { id: 3, en: "I have been a member of the club for the past five months.", vi: "Tôi đã là thành viên của câu lạc bộ được năm tháng rồi." },
+        { id: 4, en: "I am writing to express my thoughts and suggestions about the recent notice I received from the club.", vi: "Tôi viết thư này để bày tỏ những suy nghĩ và gợi ý của mình về thông báo gần đây từ CLB." },
+        { id: 5, en: "Regarding the topic you mentioned in the mail, I recommend posting this information on our club's forum so that members could share their suggestions.", vi: "Về chủ đề trong thư, tôi kiến nghị nên đăng thông tin này lên diễn đàn CLB để các thành viên góp ý." },
+        { id: 6, en: "Additionally, the club could hold a meeting to gather feedback from the members.", vi: "Ngoài ra, câu lạc bộ có thể tổ chức một buổi họp để thu thập phản hồi từ các thành viên." },
+        { id: 7, en: "I believe that taking these active steps will definitely improve the overall quality and community spirit of our club.", vi: "Tôi tin rằng việc thực hiện các bước tích cực này chắc chắn sẽ cải thiện chất lượng tổng thể và tinh thần cộng đồng của câu lạc bộ chúng ta." },
+        { id: 8, en: "I hope my ideas are helpful, and I am looking forward to hearing from you.", vi: "Tôi hy vọng những ý tưởng của mình sẽ hữu ích, và rất mong sớm nhận được phản hồi." },
+        { id: 9, en: "Best regards,", vi: "Trân trọng," },
+        { id: 10, en: "Tam", vi: "Tâm" }  
+      ];
+
+      const fullTextA_EN = "Hi Tim,\n\nHow are you these days? I hope you and your family are well. I am writing this email to tell you some news related to my sports club. \n\nI'd love to hear your thoughts on this. \n\nLet's catch up soon and discuss some suggestions.\n\nBye for now,\nTam";
+      const fullTextB_EN = "Dear Club Manager,\n\nI hope this email finds you well. My name is Tam. I am twenty-three years old. I have been a member of the club for the past five months. I am writing to express my thoughts and suggestions about the recent notice I received from the club. \n\nRegarding the topic you mentioned in the mail, I recommend posting this information on our club's forum so that members could share their suggestions. Additionally, the club could hold a meeting to gather feedback from the members. I believe that taking these active steps will definitely improve the overall quality and community spirit of our club. \n\nI hope my ideas are helpful, and I am looking forward to hearing from you.\n\nBest regards,\nTam";
+
+      function renderPart(containerId, data, prefix) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+        const showGhost = document.getElementById("toggle-ghost").checked;
+        const chosenLang = document.getElementById("select-lang").value;
+
+        data.forEach((item, idx) => {
+          const row = document.createElement("div");
+          row.id = `row-wrapper-${prefix}-${idx}`;
+          row.className = "bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 transition-all";
+
+          const textSample = chosenLang === "en" ? item.en : item.vi;
+          const ghostClass = showGhost ? "ghost-text writing-shared-style" : "ghost-text writing-shared-style ghost-hidden";
+
+          row.innerHTML = `
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Dòng số ${idx + 1}</span>
+                <button onclick="window.toggleHint('${prefix}', ${idx})" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors underline decoration-dotted underline-offset-4">Xem nghĩa câu</button>
+            </div>
+            <div class="writing-container-box border border-slate-200 rounded-xl bg-slate-50/50 relative overflow-hidden">
+                <div id="ghost-${prefix}-${idx}" class="${ghostClass}">${textSample}</div>
+                <textarea id="input-${prefix}-${idx}" oninput="window.handleTyping('${prefix}', ${idx})" autocomplete="off" spellcheck="false" rows="2" class="writing-textarea writing-shared-style"></textarea>
+            </div>
+            <div id="hint-${prefix}-${idx}" class="hidden p-3.5 bg-blue-50/50 text-blue-800 rounded-xl text-xs font-medium border border-blue-100/50 leading-relaxed italic">
+                <span class="font-bold opacity-60 not-italic mr-1">DỊCH NGHĨA:</span> ${item.vi}
+            </div>
+          `;
+          container.appendChild(row);
+        });
+      }
+
+      window.updateDisplaySettings = () => {
+        const showGhost = document.getElementById("toggle-ghost").checked;
+        const chosenLang = document.getElementById("select-lang").value;
+
+        const updateData = (data, prefix) => {
+          data.forEach((item, idx) => {
+            const ghostEl = document.getElementById(`ghost-${prefix}-${idx}`);
+            if (ghostEl) {
+              ghostEl.innerText = chosenLang === "en" ? item.en : item.vi;
+              if (showGhost) ghostEl.classList.remove("ghost-hidden");
+              else ghostEl.classList.add("ghost-hidden");
+            }
+          });
+        };
+        updateData(partAData, "partA");
+        updateData(partBData, "partB");
+
+        const ghostFullA = document.getElementById("ghost-full-partA");
+        const ghostFullB = document.getElementById("ghost-full-partB");
+        if(ghostFullA) ghostFullA.innerText = chosenLang === "en" ? fullTextA_EN : "";
+        if(ghostFullB) ghostFullB.innerText = chosenLang === "en" ? fullTextB_EN : "";
+        
+        if (showGhost) {
+          ghostFullA.classList.remove("ghost-hidden");
+          ghostFullB.classList.remove("ghost-hidden");
+        } else {
+          ghostFullA.classList.add("ghost-hidden");
+          ghostFullB.classList.add("ghost-hidden");
+        }
+      };
+
+      // Xử lý gõ của hàng câu lẻ
+      window.handleTyping = (prefix, idx) => {
+        const isInstantError = document.getElementById("toggle-instant-error").checked;
+        const data = prefix === "partA" ? partAData : partBData;
+        const targetText = data[idx].en;
+        const inputEl = document.getElementById(`input-${prefix}-${idx}`);
+        const wrapper = document.getElementById(`row-wrapper-${prefix}-${idx}`);
+        const userText = inputEl.value;
+
+        wrapper.classList.remove("row-correct", "row-wrong");
+
+        if (isInstantError) {
+          if (targetText.startsWith(userText)) {
+            inputEl.style.color = "#10b981"; // Xanh khi đúng
+            if (userText === targetText) wrapper.classList.add("row-correct");
+          } else {
+            inputEl.style.color = "#ef4444"; // Đỏ lập tức khi sai
+          }
+        } else {
+          // Chế độ không bắt lỗi lập tức: Giữ màu chữ mặc định của hệ thống
+          inputEl.style.color = "#1e293b";
+        }
+      };
+
+      // Xử lý gõ của đoạn văn lớn viết liền mạch
+      window.handleFullTyping = (prefix) => {
+        const isInstantError = document.getElementById("toggle-instant-error").checked;
+        const targetText = prefix === "partA" ? fullTextA_EN : fullTextB_EN;
+        const inputEl = document.getElementById(`input-full-${prefix}`);
+        const wrapper = document.getElementById(`wrapper-full-${prefix}`);
+        const userText = inputEl.value;
+
+        wrapper.classList.remove("row-correct", "row-wrong");
+
+        if (isInstantError) {
+          if (targetText.startsWith(userText)) {
+            inputEl.style.color = "#10b981";
+            if (userText === targetText) wrapper.classList.add("row-correct");
+          } else {
+            inputEl.style.color = "#ef4444";
+          }
+        } else {
+          inputEl.style.color = "#1e293b"; // Bình thường hóa màu chữ
+        }
+      };
+
+      // Bấm nút mới check và đổi màu toàn khối / hàng
+// HÀM NÂNG CẤP CHỐNG LỖI KÝ TỰ TRẮNG VÀ XUỐNG DÒNG TUYỆT ĐỐI
+      window.checkFullParagraph = (prefix) => {
+        const targetText = prefix === "partA" ? fullTextA_EN : fullTextB_EN;
+        const inputEl = document.getElementById(`input-full-${prefix}`);
+        const wrapper = document.getElementById(`wrapper-full-${prefix}`);
+        const userText = inputEl.value;
+
+        wrapper.classList.remove("row-correct", "row-wrong");
+
+        // CHUẨN HÓA MẠNH: Biến đổi tất cả các kiểu xuống dòng (\n, \r), dấu cách, tab... thành một khoảng trắng duy nhất
+        const cleanTarget = targetText.replace(/\s+/g, ' ').trim();
+        const cleanUser = userText.replace(/\s+/g, ' ').trim();
+
+        // Bây giờ chỉ so sánh chuỗi chữ thuần túy, bạn xuống dòng kiểu gì cũng đúng!
+        if (cleanUser === cleanTarget) {
+          wrapper.classList.add("row-correct");
+          inputEl.style.color = "#10b981"; // Đổi sang màu xanh lá khi đúng hoàn toàn
+        } else {
+          wrapper.classList.add("row-wrong");
+          inputEl.style.color = "#ef4444"; // Báo đỏ nếu sai chính tả từ ngữ
+        }
+      };
+
+      window.checkAllRows = () => {
+        const checkData = (data, prefix) => {
+          data.forEach((item, idx) => {
+            const targetText = item.en;
+            const inputEl = document.getElementById(`input-${prefix}-${idx}`);
+            const userText = inputEl.value;
+            const wrapper = document.getElementById(`row-wrapper-${prefix}-${idx}`);
+            
+            wrapper.classList.remove("row-correct", "row-wrong");
+            if (userText === targetText) {
+              wrapper.classList.add("row-correct");
+              inputEl.style.color = "#10b981";
+            } else {
+              wrapper.classList.add("row-wrong");
+              inputEl.style.color = "#ef4444";
+            }
+          });
+        };
+        checkData(partAData, "partA");
+        checkData(partBData, "partB");
+      };
+
+      window.toggleHint = (prefix, idx) => {
+        document.getElementById(`hint-${prefix}-${idx}`).classList.toggle("hidden");
+      };
+
+      renderPart("container-partA", partAData, "partA");
+      renderPart("container-partB", partBData, "partB");
+      window.updateDisplaySettings();
+    </script>
+  </body>
+</html>
